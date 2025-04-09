@@ -14,6 +14,7 @@ This project is a web application built with React and Node.js that helps users 
 - Test feature added to trigger workflow
 - New test feature for workflow testing
 - Testing Ollama-based summarization
+- Testing updated Ollama workflow
 
 ## Tech Stack
 - Frontend: React, TypeScript, TailwindCSS
