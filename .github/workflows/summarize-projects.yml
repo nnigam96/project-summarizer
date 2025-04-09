@@ -35,7 +35,7 @@ jobs:
         run: python scripts/process_readme_langchain.py
 
       - name: Upload summaries
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: project-summaries
           path: |
