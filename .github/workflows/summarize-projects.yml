@@ -24,20 +24,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Set up Ollama
-        run: |
-          curl -fsSL https://ollama.com/install.sh | sh
-          ollama pull mistral
-
       - name: Process README
-        run: python scripts/process_readme_ollama.py
+        run: python scripts/process_readme_hf.py
 
       - name: Upload summaries
         uses: actions/upload-artifact@v4
         with:
           name: project-summaries
           path: |
-            **/project_summary_ollama.json
+            **/project_summary_hf.json
 
       - name: Update website
         run: |
