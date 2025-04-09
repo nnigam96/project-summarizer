@@ -1,0 +1,49 @@
+name: Summarize Projects
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/README.md'
+
+jobs:
+  summarize-projects:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Process README (OpenAI)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scripts/process_readme.py
+
+      - name: Process README (LangChain)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scripts/process_readme_langchain.py
+
+      - name: Upload summaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: project-summaries
+          path: |
+            **/project_summary.json
+            **/project_summary_langchain.json
+
+      - name: Update website
+        run: |
+          # Add steps to update your website here
+          # This could be pushing to your website's repository
+          # or deploying to your hosting platform 
