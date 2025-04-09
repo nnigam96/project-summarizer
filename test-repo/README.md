@@ -12,6 +12,7 @@ This project is a web application built with React and Node.js that helps users 
 - Dark mode support
 - Mobile responsive design
 - Test feature added to trigger workflow
+- New test feature for workflow testing
 
 ## Tech Stack
 - Frontend: React, TypeScript, TailwindCSS
