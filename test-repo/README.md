@@ -16,6 +16,7 @@ This project is a web application built with React and Node.js that helps users 
 - Testing Ollama-based summarization
 - Testing updated Ollama workflow
 - Testing Hugging Face summarization
+- Testing PyTorch-based summarization
 
 ## Tech Stack
 - Frontend: React, TypeScript, TailwindCSS
