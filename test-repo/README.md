@@ -11,6 +11,7 @@ This project is a web application built with React and Node.js that helps users 
 - Offline support with local storage
 - Dark mode support
 - Mobile responsive design
+- Test feature added to trigger workflow
 
 ## Tech Stack
 - Frontend: React, TypeScript, TailwindCSS
