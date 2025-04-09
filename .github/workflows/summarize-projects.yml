@@ -24,23 +24,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Process README (OpenAI)
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python scripts/process_readme.py
+      - name: Set up Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama pull mistral
 
-      - name: Process README (LangChain)
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python scripts/process_readme_langchain.py
+      - name: Process README
+        run: python scripts/process_readme_ollama.py
 
       - name: Upload summaries
         uses: actions/upload-artifact@v4
         with:
           name: project-summaries
           path: |
-            **/project_summary.json
-            **/project_summary_langchain.json
+            **/project_summary_ollama.json
 
       - name: Update website
         run: |
