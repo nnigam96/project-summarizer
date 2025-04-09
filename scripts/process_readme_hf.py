@@ -32,21 +32,30 @@ def extract_features(text):
     return features[:3]  # Return top 3 features
 
 def generate_summary_with_hf(text):
-    # Initialize the summarization pipeline
-    summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-    
-    # Generate summary
-    summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
-    
-    # Extract additional information
-    tech_stack = extract_tech_stack(text)
-    features = extract_features(text)
-    
-    return {
-        "summary": summary[0]['summary_text'],
-        "key_features": features,
-        "tech_stack": tech_stack
-    }
+    try:
+        # Initialize the summarization pipeline with a smaller model
+        summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+        
+        # Generate summary
+        summary = summarizer(text, max_length=130, min_length=30, do_sample=False)
+        
+        # Extract additional information
+        tech_stack = extract_tech_stack(text)
+        features = extract_features(text)
+        
+        return {
+            "summary": summary[0]['summary_text'],
+            "key_features": features,
+            "tech_stack": tech_stack
+        }
+    except Exception as e:
+        print(f"Error during summarization: {str(e)}")
+        # Fallback to simple extraction if summarization fails
+        return {
+            "summary": text[:200] + "...",  # First 200 characters as summary
+            "key_features": extract_features(text),
+            "tech_stack": extract_tech_stack(text)
+        }
 
 def main():
     # Get the repository path from environment variable
