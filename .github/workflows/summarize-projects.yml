@@ -2,38 +2,38 @@ name: Summarize Projects
 
 on:
   push:
-    branches:
-      - main
     paths:
       - '**/README.md'
+      - '.github/workflows/summarize-projects.yml'
 
 jobs:
-  summarize-projects:
+  summarize:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+        
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-
+          
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
           pip install -r requirements.txt
-
+          
       - name: Process README
-        run: python scripts/process_readme_hf.py
-
-      - name: Upload summaries
+        env:
+          HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
+        run: |
+          python scripts/process_readme_llm.py
+          
+      - name: Upload summary
         uses: actions/upload-artifact@v4
         with:
-          name: project-summaries
-          path: |
-            **/project_summary_hf.json
+          name: project-summary
+          path: project_summary_llm.json
 
       - name: Update website
         run: |
