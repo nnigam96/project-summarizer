@@ -25,7 +25,6 @@ jobs:
         with:
           repository: ${{ github.event.client_payload.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          path: target-repo
 
       - name: Set up Python
         uses: actions/setup-python@v4
