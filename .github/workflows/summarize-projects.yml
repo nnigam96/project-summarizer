@@ -62,7 +62,7 @@ jobs:
           cd summaries
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/nnigam96/project-summarizer.git
+          git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/nnigam96/project-summaries.git
           git add .
           git commit -m "Update summary for ${{ github.event.client_payload.repository_name }}" || echo "No changes to commit"
           git push
