@@ -13,19 +13,25 @@ on:
 jobs:
   summarize:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout current repository
+      - name: Checkout project-summarizer (this repo with script)
+        uses: actions/checkout@v4
+        with:
+          path: summarizer
+
+      - name: Checkout target repo to summarize
         uses: actions/checkout@v4
         with:
           repository: ${{ github.event.client_payload.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          
+          path: target-repo
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-          
+
       - name: Cache pip dependencies
         uses: actions/cache@v3
         with:
@@ -33,29 +39,31 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
-          
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install huggingface_hub          
+          pip install huggingface_hub
+
       - name: Process README
         env:
           HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
         run: |
-          python scripts/process_readme_llm.py
-          
+          python summarizer/scripts/process_readme_llm.py
+        working-directory: target-repo
+
       - name: Checkout summaries repository
         uses: actions/checkout@v4
         with:
           repository: nnigam96/project-summaries
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           path: summaries
-          
+
       - name: Save summary
         run: |
           mkdir -p summaries/${{ github.event.client_payload.repository_name }}
-          cp project_summary_llm.json summaries/${{ github.event.client_payload.repository_name }}/summary.json
-          
+          cp target-repo/project_summary_llm.json summaries/${{ github.event.client_payload.repository_name }}/summary.json
+
       - name: Commit and push summary
         run: |
           cd summaries
