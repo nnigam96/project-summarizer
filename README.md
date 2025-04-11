@@ -78,6 +78,25 @@ pip install -r requirements.txt
 python test.py
 ```
 
+## Manual Trigger (Optional)
+
+If you want to manually trigger the summarization of a repository's README (for example, outside of the usual GitHub Actions workflow), you can use the provided script:
+
+```bash
+# Usage:
+python scripts/trigger_summarization.py owner/repo
+```
+
+This script sends a `repository_dispatch` event to the summarizer, which will then process and summarize the specified repository.
+
+Make sure to set your GitHub Personal Access Token via environment variable:
+
+```bash
+export PERSONAL_ACCESS_TOKEN='your-github-token'
+```
+
+You can also provide the token directly as an argument within the script if needed. The token must have access to the `project-summarizer` repository.
+
 ## Customization
 
 You can customize the summary generation by:
@@ -88,4 +107,4 @@ You can customize the summary generation by:
 
 ## License
 
-MIT License 
+MIT License

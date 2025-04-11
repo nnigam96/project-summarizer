@@ -1,7 +1,11 @@
 name: Summarize Projects
 
 on:
+  repository_dispatch:
+    types: [summarize_repo]
   push:
+    branches:
+      - main
     paths:
       - '**/README.md'
       - '.github/workflows/summarize-projects.yml'
@@ -11,8 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
-        
+      - name: Checkout current repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.client_payload.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -29,14 +37,23 @@ jobs:
         run: |
           python scripts/process_readme_llm.py
           
-      - name: Upload summary
-        uses: actions/upload-artifact@v4
+      - name: Checkout summaries repository
+        uses: actions/checkout@v4
         with:
-          name: project-summary
-          path: project_summary_llm.json
-
-      - name: Update website
+          repository: nnigam96/project-summaries
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: summaries
+          
+      - name: Save summary
         run: |
-          # Add steps to update your website here
-          # This could be pushing to your website's repository
-          # or deploying to your hosting platform 
+          mkdir -p summaries/${{ github.event.client_payload.repository_name }}
+          cp project_summary_llm.json summaries/${{ github.event.client_payload.repository_name }}/summary.json
+          
+      - name: Commit and push summary
+        run: |
+          cd summaries
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Update summary for ${{ github.event.client_payload.repository_name }}"
+          git push 
