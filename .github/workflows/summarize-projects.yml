@@ -40,7 +40,7 @@ jobs:
       - name: Checkout summaries repository
         uses: actions/checkout@v4
         with:
-          repository: nnigam96/project-summaries
+          repository: nnigam96/project-summarizer
           token: ${{ secrets.GITHUB_TOKEN }}
           path: summaries
           
